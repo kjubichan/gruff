@@ -1,7 +1,5 @@
 # frozen_string_literal: true
 
-require 'gruff/base'
-
 #
 # Here's how to make a Gruff::Line.
 #
@@ -12,7 +10,7 @@ require 'gruff/base'
 #   g.write("line.png")
 #
 # There are also other options described below, such as {#baseline_value}, {#baseline_color},
-# {#hide_dots}, and {#hide_lines}.
+# {#hide_dots=}, and {#hide_lines=}.
 #
 class Gruff::Line < Gruff::Base
   # Allow for reference lines ( which are like baseline ... just allowing for more & on both axes ).
@@ -30,7 +28,7 @@ class Gruff::Line < Gruff::Base
   # default is +'circle'+, other options include square.
   attr_writer :dot_style
 
-  # Hide parts of the graph to fit more datapoints, or for a different appearance.
+  # Hide parts of the graph to fit more data points, or for a different appearance.
   attr_writer :hide_dots, :hide_lines
 
   # accessors for support of xy data.
@@ -69,7 +67,7 @@ class Gruff::Line < Gruff::Base
   #   g = Gruff::Line.new(400, false) # 400px wide, no lines (for backwards compatibility)
   #   g = Gruff::Line.new(false) # Defaults to 800px wide, no lines (for backwards compatibility)
   #
-  # The preferred way is to call {#hide_dots} or {#hide_lines} instead.
+  # The preferred way is to call {#hide_dots=} or {#hide_lines=} instead.
   def initialize(*args)
     raise ArgumentError, 'Wrong number of arguments' if args.length > 2
 
@@ -134,7 +132,7 @@ class Gruff::Line < Gruff::Base
   #   g.data("Capples", [1, 1, 2, 2, 3, 3])
   #
   #   # labels will be drawn at the x locations of the keys passed in.
-  #   In this example the lables are drawn at x positions 2, 4, and 6:
+  #   In this example the labels are drawn at x positions 2, 4, and 6:
   #   g.labels = {0 => '2003', 2 => '2004', 4 => '2005', 6 => '2006'}
   #   # The 0 => '2003' label will be ignored since it is outside the chart range.
   def dataxy(name, x_data_points = [], y_data_points = [], color = nil)
@@ -155,11 +153,9 @@ class Gruff::Line < Gruff::Base
   end
 
   def draw_reference_line(reference_line, left, right, top, bottom)
-    config = {
-      color: reference_line[:color] || @reference_line_default_color,
-      width: reference_line[:width] || @reference_line_default_width
-    }
-    Gruff::Renderer::DashLine.new(config).render(left, top, right, bottom)
+    color = reference_line[:color] || @reference_line_default_color
+    width = reference_line[:width] || @reference_line_default_width
+    Gruff::Renderer::DashLine.new(color: color, width: width).render(left, top, right, bottom)
   end
 
   def draw_horizontal_reference_line(reference_line)
@@ -237,8 +233,6 @@ class Gruff::Line < Gruff::Base
         prev_y = new_y
       end
     end
-
-    Gruff::Renderer.finish
   end
 
 private

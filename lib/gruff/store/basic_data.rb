@@ -1,13 +1,15 @@
 # frozen_string_literal: true
 
 module Gruff
-  # @private
   class Store
-    class BaseData < Struct.new(:label, :points, :color)
+    # @private
+    class BasicData < Struct.new(:label, :points, :color)
       def initialize(label, points, color)
-        self.label = label.to_s
-        self.points = Array(points)
-        self.color = color
+        super(label.to_s, Array(points), color)
+      end
+
+      def empty?
+        points.empty?
       end
 
       def columns
@@ -22,9 +24,9 @@ module Gruff
         points.compact.max
       end
 
-      def normalize(args = {})
+      def normalize(minimum:, spread:)
         norm_points = points.map do |point|
-          point.nil? ? nil : (point.to_f - args[:minimum].to_f) / args[:spread]
+          point.nil? ? nil : (point.to_f - minimum.to_f) / spread
         end
 
         self.class.new(label, norm_points, color)

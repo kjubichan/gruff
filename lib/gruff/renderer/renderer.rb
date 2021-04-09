@@ -7,58 +7,51 @@ module Gruff
   class Renderer
     include Singleton
 
-    attr_accessor :draw, :image, :scale
+    attr_accessor :draw, :image, :scale, :text_renderers
 
-    class << self
-      def setup(columns, rows, font, scale, theme_options)
-        draw = Magick::Draw.new
-        draw.font = font if font
-        # Scale down from 800x600 used to calculate drawing.
-        draw.scale(scale, scale)
+    def self.setup(columns, rows, font, scale, theme_options)
+      draw = Magick::Draw.new
+      draw.font = font if font
+      # Scale down from 800x600 used to calculate drawing.
+      draw.scale(scale, scale)
 
-        image = Renderer.instance.background(columns, rows, scale, theme_options)
+      image = Renderer.instance.background(columns, rows, scale, theme_options)
 
-        Renderer.instance.draw  = draw
-        Renderer.instance.scale = scale
-        Renderer.instance.image = image
-      end
+      Renderer.instance.draw  = draw
+      Renderer.instance.scale = scale
+      Renderer.instance.image = image
+      Renderer.instance.text_renderers = []
+    end
 
-      def setup_transparent_background(columns, rows)
-        image = Renderer.instance.render_transparent_background(columns, rows)
-        Renderer.instance.image = image
-      end
+    def self.setup_transparent_background(columns, rows)
+      image = Renderer.instance.render_transparent_background(columns, rows)
+      Renderer.instance.image = image
+    end
 
-      def background_image=(image)
-        Renderer.instance.image = image
-      end
+    def self.background_image=(image)
+      Renderer.instance.image = image
+    end
 
-      def font=(font)
-        draw = Renderer.instance.draw
-        draw.font = font if font
-      end
+    def self.font=(font)
+      draw = Renderer.instance.draw
+      draw.font = font if font
+    end
 
-      def finish
-        draw  = Renderer.instance.draw
-        image = Renderer.instance.image
+    def self.finish
+      draw  = Renderer.instance.draw
+      image = Renderer.instance.image
 
-        draw.draw(image)
-      end
+      draw.draw(image)
 
-      def write(file_name)
-        Renderer.instance.image.write(file_name)
-      end
-
-      def to_blob(file_format)
-        Renderer.instance.image.to_blob do
-          self.format = file_format
-        end
+      Renderer.instance.text_renderers.each do |renderer|
+        renderer.render(renderer.width, renderer.height, renderer.x, renderer.y, renderer.gravity)
       end
     end
 
     def background(columns, rows, scale, theme_options)
       case theme_options[:background_colors]
       when Array
-        gradated_background(columns, rows, theme_options[:background_colors][0], theme_options[:background_colors][1], theme_options[:background_direction])
+        gradated_background(columns, rows, *theme_options[:background_colors][0..1], theme_options[:background_direction])
       when String
         solid_background(columns, rows, theme_options[:background_colors])
       else
@@ -102,7 +95,7 @@ module Gruff
 
       if @gradated_background_retry_count < 3
         @gradated_background_retry_count += 1
-        gradated_background(top_color, bottom_color, direct)
+        gradated_background(columns, rows, top_color, bottom_color, direct)
       else
         raise e
       end

@@ -1,7 +1,5 @@
 # frozen_string_literal: true
 
-require 'gruff/base'
-
 # Experimental!!! See also the Net graph.
 #
 # Here's how to set up a Gruff::Spider.
@@ -15,7 +13,7 @@ require 'gruff/base'
 #   g.data :Wisdom, [10]
 #   g.data 'Charisma', [16]
 #   g.write("spider.png")
-
+#
 class Gruff::Spider < Gruff::Base
   # Hide all text.
   attr_writer :hide_axes
@@ -64,8 +62,6 @@ class Gruff::Spider < Gruff::Base
 
     # Draw polygon
     draw_polygon(center_x, center_y, additive_angle)
-
-    Gruff::Renderer.finish
   end
 
 private
@@ -83,7 +79,7 @@ private
 
     # Draw label
     text_renderer = Gruff::Renderer::Text.new(amount, font: @font, size: @legend_font_size, color: @marker_color, weight: Magick::BoldWeight)
-    text_renderer.render(0, 0, x, y, Magick::CenterGravity)
+    text_renderer.add_to_render_queue(0, 0, x, y, Magick::CenterGravity)
   end
 
   def draw_axes(center_x, center_y, radius, additive_angle, line_color = nil)
@@ -118,6 +114,6 @@ private
   end
 
   def sums_for_spider
-    store.data.reduce(0.0) { |sum, data_row| sum + data_row.points.first }
+    store.data.sum { |data_row| data_row.points.first }
   end
 end

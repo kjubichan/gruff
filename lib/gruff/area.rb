@@ -1,7 +1,5 @@
 # frozen_string_literal: true
 
-require 'gruff/base'
-
 #
 # Gruff::Area provides an area graph which displays graphically
 # quantitative data.
@@ -59,7 +57,5 @@ class Gruff::Area < Gruff::Base
 
       Gruff::Renderer::Polygon.new(color: data_row.color, width: @stroke_width, opacity: @fill_opacity).render(poly_points)
     end
-
-    Gruff::Renderer.finish
   end
 end

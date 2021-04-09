@@ -1,8 +1,5 @@
 # frozen_string_literal: true
 
-require 'gruff/base'
-require 'gruff/helper/stacked_mixin'
-
 #
 # Here's how to set up a Gruff::StackedArea.
 #
@@ -69,7 +66,5 @@ class Gruff::StackedArea < Gruff::Base
 
       Gruff::Renderer::Polygon.new(color: data_row.color).render(poly_points)
     end
-
-    Gruff::Renderer.finish
   end
 end

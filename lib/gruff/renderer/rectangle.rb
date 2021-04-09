@@ -1,9 +1,10 @@
 # frozen_string_literal: true
 
 module Gruff
+  # @private
   class Renderer::Rectangle
-    def initialize(args = {})
-      @color = args[:color]
+    def initialize(color: nil)
+      @color = color
     end
 
     def render(upper_left_x, upper_left_y, lower_right_x, lower_right_y)

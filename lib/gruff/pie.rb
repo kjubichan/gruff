@@ -1,7 +1,5 @@
 # frozen_string_literal: true
 
-require 'gruff/base'
-
 #
 # Here's how to make a Gruff::Pie.
 #
@@ -69,8 +67,6 @@ class Gruff::Pie < Gruff::Base
         update_chart_degrees_with slice.degrees
       end
     end
-
-    Gruff::Renderer.finish
   end
 
 private
@@ -81,7 +77,7 @@ private
 
       slices.sort_by(&:value) if @sort
 
-      total = slices.map(&:value).inject(:+).to_f
+      total = slices.sum(&:value).to_f
       slices.each { |slice| slice.total = total }
     end
   end
@@ -174,7 +170,7 @@ private
 
   def draw_label(x, y, value)
     text_renderer = Gruff::Renderer::Text.new(value, font: @font, size: @marker_font_size, color: @font_color, weight: Magick::BoldWeight)
-    text_renderer.render(0, 0, x, y, Magick::CenterGravity)
+    text_renderer.add_to_render_queue(0, 0, x, y, Magick::CenterGravity)
   end
 
   # Helper Classes

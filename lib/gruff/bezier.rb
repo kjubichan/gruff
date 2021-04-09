@@ -1,7 +1,5 @@
 # frozen_string_literal: true
 
-require 'gruff/base'
-
 #
 # Gruff::Bezier is a special line graph that have
 # the bezier curve.
@@ -55,7 +53,5 @@ class Gruff::Bezier < Gruff::Base
         Gruff::Renderer::Bezier.new(color: data_row.color, width: stroke_width).render(poly_points)
       end
     end
-
-    Gruff::Renderer.finish
   end
 end

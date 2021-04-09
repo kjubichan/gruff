@@ -1,28 +1,26 @@
 # frozen_string_literal: true
 
-require 'gruff/base'
-
 # EXPERIMENTAL!
 #
 # Doesn't work yet.
 #
 class Gruff::PhotoBar < Gruff::Base
-# TODO
-#
-# define base and cap in yml
-# allow for image directory to be located elsewhere
-# more exact measurements for bar heights (go all the way to the bottom of the graph)
-# option to tile images instead of use a single image
-# drop base label a few px lower so photo bar graphs can have a base dropping over the lower marker line
-#
+  # TODO
+  #
+  # define base and cap in yml
+  # allow for image directory to be located elsewhere
+  # more exact measurements for bar heights (go all the way to the bottom of the graph)
+  # option to tile images instead of use a single image
+  # drop base label a few px lower so photo bar graphs can have a base dropping over the lower marker line
+  #
 
   # The name of a pre-packaged photo-based theme.
   attr_reader :theme
 
-#   def initialize(target_width=800)
-#     super
-#     init_photo_bar_graphics()
-#   end
+  # def initialize(target_width=800)
+  #   super
+  #   init_photo_bar_graphics()
+  # end
 
   def draw
     super
@@ -70,8 +68,6 @@ class Gruff::PhotoBar < Gruff::Base
         draw_label(label_center, point_index)
       end
     end
-
-    Gruff::Renderer.finish
   end
 
   # Return the chosen theme or the default

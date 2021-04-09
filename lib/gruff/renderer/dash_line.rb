@@ -1,10 +1,11 @@
 # frozen_string_literal: true
 
 module Gruff
+  # @private
   class Renderer::DashLine
-    def initialize(args = {})
-      @color = args[:color]
-      @width = args[:width]
+    def initialize(color:, width:)
+      @color = color
+      @width = width
     end
 
     def render(start_x, start_y, end_x, end_y)

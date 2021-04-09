@@ -1,7 +1,5 @@
 # frozen_string_literal: true
 
-require 'gruff/base'
-
 #
 # Here's how to set up a Gruff::Scatter.
 #
@@ -84,8 +82,6 @@ class Gruff::Scatter < Gruff::Base
         Gruff::Renderer::Circle.new(color: data_row.color, width: stroke_width).render(new_x, new_y, new_x - circle_radius, new_y)
       end
     end
-
-    Gruff::Renderer.finish
   end
 
   # The first parameter is the name of the dataset.  The next two are the
@@ -195,7 +191,7 @@ private
       calculate_spread
       normalize
 
-      @marker_count = (@x_spread / @x_axis_increment).to_i
+      self.marker_count = (@x_spread / @x_axis_increment).to_i
       @x_increment = @x_axis_increment
     end
     increment_x_scaled = @graph_width.to_f / (@x_spread / @x_increment)
@@ -218,7 +214,7 @@ private
         label = vertical_label(marker_label, @x_increment)
         rotation = -90.0 if @use_vertical_x_labels
         text_renderer = Gruff::Renderer::Text.new(label, font: @font, size: @marker_font_size, color: @font_color, rotation: rotation)
-        text_renderer.render(1.0, 1.0, x_offset, y_offset)
+        text_renderer.add_to_render_queue(1.0, 1.0, x_offset, y_offset)
       end
     end
   end

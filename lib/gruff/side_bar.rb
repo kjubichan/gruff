@@ -1,7 +1,5 @@
 # frozen_string_literal: true
 
-require 'gruff/base'
-
 # Graph with individual horizontal bars instead of vertical bars.
 #
 # Here's how to set up a Gruff::SideBar.
@@ -21,6 +19,8 @@ require 'gruff/base'
 #   g.write('sidebar.png')
 #
 class Gruff::SideBar < Gruff::Base
+  using String::GruffCommify
+
   # Spacing factor applied between bars.
   attr_writer :bar_spacing
 
@@ -35,12 +35,16 @@ class Gruff::SideBar < Gruff::Base
   # Default is +false+.
   attr_writer :show_labels_for_bar_values
 
+  # Prevent drawing of column labels left of a side bar graph.  Default is +false+.
+  attr_writer :hide_labels
+
   def initialize_ivars
     super
     @bar_spacing = 0.9
     @group_spacing = 10
     @label_formatting = nil
     @show_labels_for_bar_values = false
+    @hide_labels = false
   end
   private :initialize_ivars
 
@@ -51,6 +55,20 @@ class Gruff::SideBar < Gruff::Base
     return unless data_given?
 
     draw_bars
+  end
+
+protected
+
+  def hide_labels?
+    @hide_labels
+  end
+
+  def hide_left_label_area?
+    hide_labels?
+  end
+
+  def hide_bottom_label_area?
+    @hide_line_markers
   end
 
 private
@@ -73,7 +91,7 @@ private
       data_row.points.each_with_index do |data_point, point_index|
         group_spacing = @group_spacing * @scale * point_index
 
-        # Using the original calcs from the stacked bar chart
+        # Using the original calculations from the stacked bar chart
         # to get the difference between
         # part of the bart chart we wish to stack.
         temp1 = @graph_left + (@graph_width - data_point * @graph_width - height[point_index])
@@ -105,8 +123,6 @@ private
         end
       end
     end
-
-    Gruff::Renderer.finish
   end
 
   # Instead of base class version, draws vertical background lines and label
@@ -114,7 +130,7 @@ private
     return if @hide_line_markers
 
     # Draw horizontal line markers and annotate with numbers
-    number_of_lines = @marker_count || 5
+    number_of_lines = marker_count
     number_of_lines = 1 if number_of_lines == 0
 
     # TODO: Round maximum marker value to a round number like 100, 0.1, 0.5, etc.
@@ -131,7 +147,7 @@ private
 
       unless @hide_line_numbers
         text_renderer = Gruff::Renderer::Text.new(marker_label, font: @font, size: @marker_font_size, color: @font_color)
-        text_renderer.render(0, 0, x, @graph_bottom + (LABEL_MARGIN * 2.0), Magick::CenterGravity)
+        text_renderer.add_to_render_queue(0, 0, x, @graph_bottom + LABEL_MARGIN, Magick::CenterGravity)
       end
     end
   end
@@ -144,7 +160,7 @@ private
       lbl = @use_data_label ? label : @labels[index]
 
       text_renderer = Gruff::Renderer::Text.new(lbl, font: @font, size: @marker_font_size, color: @font_color)
-      text_renderer.render(@graph_left - LABEL_MARGIN * 2, 1.0, 0.0, y_offset, Magick::EastGravity)
+      text_renderer.add_to_render_queue(@graph_left - LABEL_MARGIN, 1.0, 0.0, y_offset, Magick::EastGravity)
     end
   end
 

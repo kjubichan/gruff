@@ -167,7 +167,6 @@ class TestGruffLine < GruffTestCase
   def test_request_too_many_colors
     g = Gruff::Line.new
     g.title = 'More Sets Than in Color Array'
-#     g.theme = {} # Sets theme with only black and white
     @datasets.each do |data|
       g.data(data[0], data[1])
     end
@@ -304,6 +303,12 @@ class TestGruffLine < GruffTestCase
     g.no_data_message = 'There is no data'
     g.write('test/output/line_no_data_msg.png')
     assert_same_image('test/expected/line_no_data_msg.png', 'test/output/line_no_data_msg.png')
+
+    g = Gruff::Line.new(400)
+    g.data 'A', []
+    g.data 'B', []
+    g.write('test/output/line_no_data_with_empty.png')
+    assert_same_image('test/expected/line_no_data_with_empty.png', 'test/output/line_no_data_with_empty.png')
   end
 
   def test_all_zeros

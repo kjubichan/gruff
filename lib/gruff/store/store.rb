@@ -1,6 +1,7 @@
 # frozen_string_literal: true
 
 module Gruff
+  # @private
   class Store
     attr_reader :data, :norm_data
 
@@ -15,10 +16,10 @@ module Gruff
       @data << @data_class.new(*args)
     end
 
-    def normalize(args = {})
+    def normalize(**keywords)
       unless @normalized
         @data.each do |data_row|
-          @norm_data << data_row.normalize(args)
+          @norm_data << data_row.normalize(**keywords)
         end
 
         @normalized = true
@@ -26,7 +27,7 @@ module Gruff
     end
 
     def empty?
-      @data.empty?
+      @data.all?(&:empty?)
     end
 
     def length
@@ -56,11 +57,11 @@ module Gruff
     end
 
     def sort_data!
-      @data = @data.sort_by { |a| -a.points.reduce(0) { |acc, elem| acc + elem.to_f } }
+      @data = @data.sort_by { |a| -a.points.sum(&:to_f) }
     end
 
     def sort_norm_data!
-      @norm_data = @norm_data.sort_by { |a| -a.points.reduce(0) { |acc, elem| acc + elem.to_f } }
+      @norm_data = @norm_data.sort_by { |a| -a.points.sum(&:to_f) }
     end
 
     def reverse!

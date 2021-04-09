@@ -71,8 +71,6 @@ class TestGruffPie < GruffTestCase
 
     g.data(:Blake, [41])
     g.data(:Aaron, [42])
-#    g.data(:Grouch, [40])
-#    g.data(:Snuffleupagus, [43])
 
     g.write('test/output/pie_nearly_equal.png')
     assert_same_image('test/expected/pie_nearly_equal.png', 'test/output/pie_nearly_equal.png')
@@ -109,6 +107,26 @@ class TestGruffPie < GruffTestCase
 
     g.write('test/output/pie_one_val.png')
     assert_same_image('test/expected/pie_one_val.png', 'test/output/pie_one_val.png')
+  end
+
+  def test_no_data
+    g = Gruff::Pie.new
+    g.title = 'No Data'
+    # Default theme
+    g.write('test/output/pie_no_data.png')
+    assert_same_image('test/expected/pie_no_data.png', 'test/output/pie_no_data.png')
+
+    g = Gruff::Pie.new
+    g.title = 'No Data Title'
+    g.no_data_message = 'There is no data'
+    g.write('test/output/pie_no_data_msg.png')
+    assert_same_image('test/expected/pie_no_data_msg.png', 'test/output/pie_no_data_msg.png')
+
+    g = Gruff::Pie.new
+    g.data 'A', []
+    g.data 'B', []
+    g.write('test/output/pie_no_data_with_empty.png')
+    assert_same_image('test/expected/pie_no_data_with_empty.png', 'test/output/pie_no_data_with_empty.png')
   end
 
   def test_wide

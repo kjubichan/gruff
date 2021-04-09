@@ -9,8 +9,13 @@ require 'gruff/version'
   patch/rmagick
   patch/string
 
-  themes
   base
+
+  helper/bar_conversion.rb
+  helper/stacked_mixin
+  helper/bar_value_label_mixin
+
+  themes
   area
   bar
   bezier
@@ -22,10 +27,10 @@ require 'gruff/version'
   pie
   scatter
   spider
+  side_bar
   stacked_area
   stacked_bar
   side_stacked_bar
-  side_bar
   accumulator_bar
 
   scene
@@ -43,7 +48,7 @@ require 'gruff/version'
   renderer/text
 
   store/store
-  store/base_data
+  store/basic_data
   store/custom_data
   store/xy_data
 

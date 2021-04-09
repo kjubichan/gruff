@@ -1,8 +1,5 @@
 # frozen_string_literal: true
 
-require 'gruff/base'
-require 'gruff/themes'
-
 #
 # A bullet graph is a variation of a bar graph.
 # http://en.wikipedia.org/wiki/Bullet_graph
@@ -16,6 +13,8 @@ require 'gruff/themes'
 #
 class Gruff::Bullet < Gruff::Base
   def initialize(target_width = '400x40')
+    super
+
     if target_width.is_a?(String)
       @columns, @rows = target_width.split('x').map(&:to_f)
     else
@@ -24,10 +23,6 @@ class Gruff::Bullet < Gruff::Base
     end
     @columns.freeze
     @rows.freeze
-
-    initialize_graph_scale
-    initialize_ivars
-    initialize_store
 
     self.theme = Gruff::Themes::GREYSCALE
   end
@@ -88,8 +83,6 @@ class Gruff::Bullet < Gruff::Base
     # Value
     rect_renderer = Gruff::Renderer::Rectangle.new(color: @font_color)
     rect_renderer.render(graph_left, thickness, graph_left + graph_width * (@value / maximum_value), thickness * 2)
-
-    Gruff::Renderer.finish
   end
 
 private
@@ -100,6 +93,6 @@ private
     font_height = calculate_caps_height(scale_fontsize(@title_font_size))
 
     text_renderer = Gruff::Renderer::Text.new(@title, font: @font, size: @title_font_size, color: @font_color)
-    text_renderer.render(1.0, 1.0, font_height / 2, font_height / 2, Magick::NorthWestGravity)
+    text_renderer.add_to_render_queue(1.0, 1.0, font_height / 2, font_height / 2, Magick::NorthWestGravity)
   end
 end

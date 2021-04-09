@@ -1,7 +1,9 @@
 inherit_from: .rubocop_todo.yml
+require: rubocop-performance
 
 AllCops:
     EnabledByDefault: true
+    TargetRubyVersion: 2.4
     Exclude:
         - 'vendor/bundle/**/*'
         - 'rails_generators/gruff/**/*'
@@ -10,7 +12,7 @@ Gemspec/OrderedDependencies:
   Enabled: false
 
 Gemspec/RequiredRubyVersion:
-  Enabled: false
+  Enabled: true
 
 Layout/AccessModifierIndentation:
   EnforcedStyle: outdent
@@ -18,14 +20,14 @@ Layout/AccessModifierIndentation:
 Layout/ClassStructure:
   Enabled: false
 
-Layout/CommentIndentation:
-  Enabled: false
-
 Layout/FirstMethodArgumentLineBreak:
   Enabled: false
 
 Layout/LeadingCommentSpace:
   Enabled: false
+
+Layout/LineLength:
+  Max: 150
 
 Layout/MultilineMethodArgumentLineBreaks:
   Enabled: false
@@ -36,7 +38,16 @@ Layout/MultilineAssignmentLayout:
 Lint/AssignmentInCondition:
   Enabled: false
 
+Lint/ConstantResolution:
+  Enabled: false
+
 Lint/NumberConversion:
+  Enabled: false
+
+Style/AccessorGrouping:
+  Enabled: false
+
+Style/ClassAndModuleChildren:
   Enabled: false
 
 Style/ConditionalAssignment:
@@ -47,6 +58,9 @@ Style/ConstantVisibility:
 
 Style/Copyright:
   Enabled: false
+
+Style/Documentation:
+  Enabled: true
 
 Style/Encoding:
   Enabled: false
@@ -106,4 +120,7 @@ Style/SymbolArray:
   Enabled: false
 
 Style/TernaryParentheses:
+  Enabled: false
+
+Performance/ChainArrayAllocation:
   Enabled: false

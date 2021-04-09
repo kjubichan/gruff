@@ -1,8 +1,5 @@
 # frozen_string_literal: true
 
-require 'gruff/base'
-require 'gruff/helper/bar_conversion'
-
 #
 # Gruff::Bar provide a bar graph that presents categorical data
 # with rectangular bars.
@@ -19,6 +16,8 @@ require 'gruff/helper/bar_conversion'
 #   g.write('bar.png')
 #
 class Gruff::Bar < Gruff::Base
+  using String::GruffCommify
+
   # Spacing factor applied between bars.
   attr_writer :bar_spacing
 
@@ -33,12 +32,16 @@ class Gruff::Bar < Gruff::Base
   # Default is +false+.
   attr_writer :show_labels_for_bar_values
 
+  # Prevent drawing of column labels below a bar graph.  Default is +false+.
+  attr_writer :hide_labels
+
   def initialize_ivars
     super
     @spacing_factor = 0.9
     @group_spacing = 10
     @label_formatting = nil
     @show_labels_for_bar_values = false
+    @hide_labels = false
   end
   private :initialize_ivars
 
@@ -67,6 +70,18 @@ class Gruff::Bar < Gruff::Base
   end
 
 protected
+
+  def hide_labels?
+    @hide_labels
+  end
+
+  def hide_left_label_area?
+    @hide_line_markers
+  end
+
+  def hide_bottom_label_area?
+    hide_labels?
+  end
 
   def draw_bars
     # Setup spacing.
@@ -129,8 +144,6 @@ protected
 
     # Draw the last label if requested
     draw_label(@graph_right, column_count, Magick::NorthWestGravity) if @center_labels_over_point
-
-    Gruff::Renderer.finish
   end
 
   def calculate_spacing

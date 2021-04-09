@@ -1,8 +1,5 @@
 # frozen_string_literal: true
 
-require 'gruff/side_bar'
-require 'gruff/helper/stacked_mixin'
-
 #
 # New gruff graph type added to enable sideways stacking bar charts
 # (basically looks like a x/y flip of a standard stacking bar chart)
@@ -40,12 +37,16 @@ class Gruff::SideStackedBar < Gruff::SideBar
   # Default is +false+.
   attr_writer :show_labels_for_bar_values
 
+  # Prevent drawing of column labels left of a side stacked bar graph.  Default is +false+.
+  attr_writer :hide_labels
+
   def initialize_ivars
     super
     @bar_spacing = 0.9
     @segment_spacing = 2.0
     @label_formatting = nil
     @show_labels_for_bar_values = false
+    @hide_labels = false
   end
   private :initialize_ivars
 
@@ -53,6 +54,20 @@ class Gruff::SideStackedBar < Gruff::SideBar
     @has_left_labels = true
     calculate_maximum_by_stack
     super
+  end
+
+protected
+
+  def hide_labels?
+    @hide_labels
+  end
+
+  def hide_left_label_area?
+    hide_labels?
+  end
+
+  def hide_bottom_label_area?
+    @hide_line_markers
   end
 
 private
@@ -69,7 +84,7 @@ private
 
     store.norm_data.each_with_index do |data_row, row_index|
       data_row.points.each_with_index do |data_point, point_index|
-        ## using the original calcs from the stacked bar chart to get the difference between
+        ## using the original calculations from the stacked bar chart to get the difference between
         ## part of the bart chart we wish to stack.
         temp1 = @graph_left + (@graph_width -
                                   data_point * @graph_width -
@@ -107,7 +122,5 @@ private
         draw_value_label(x, y, text, true)
       end
     end
-
-    Gruff::Renderer.finish
   end
 end

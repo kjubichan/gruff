@@ -13,6 +13,7 @@
 #
 module Gruff
   module Mini
+    # A class for drawing a small pie graph.
     class Pie < Gruff::Pie
       include Gruff::Mini::Legend
 
@@ -34,8 +35,6 @@ module Gruff
         super
 
         draw_vertical_legend
-
-        Gruff::Renderer.finish
       end
     end
   end

@@ -1,10 +1,11 @@
 # frozen_string_literal: true
 
 module Gruff
+  # @private
   class Renderer::Circle
-    def initialize(args = {})
-      @color = args[:color]
-      @width = args[:width] || 1.0
+    def initialize(color:, width: 1.0)
+      @color = color
+      @width = width
     end
 
     def render(origin_x, origin_y, perim_x, perim_y)

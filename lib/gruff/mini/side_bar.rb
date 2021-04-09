@@ -21,6 +21,7 @@
 #
 module Gruff
   module Mini
+    # A class for drawing a small side bar graph.
     class SideBar < Gruff::SideBar
       include Gruff::Mini::Legend
 
@@ -41,8 +42,6 @@ module Gruff
         super
 
         draw_vertical_legend
-
-        Gruff::Renderer.finish
       end
     end
   end
